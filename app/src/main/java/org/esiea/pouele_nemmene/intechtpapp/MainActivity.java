@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
@@ -55,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button btn_navigate = (Button)findViewById(R.id.button_navigate);
+        Button btn_showLondonOnMap = (Button)findViewById(R.id.button_map_london);
         goToSecondeActivity(btn_navigate);
+        showLondresOnMap(btn_showLondonOnMap);
     }
 
     public void goToSecondeActivity(Button btn){
@@ -64,6 +67,15 @@ public class MainActivity extends AppCompatActivity {
             {
                 Intent i = new Intent(getApplicationContext(), SecondeActivity.class);
                 startActivity(i);
+            }
+        });
+    }
+
+    public void showLondresOnMap(Button btn){
+        btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=Londres")));
             }
         });
     }
