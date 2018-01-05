@@ -21,6 +21,7 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Continuer à la page 29 du document du TP
      DatePickerDialog dpd = null;
 
     @Override
