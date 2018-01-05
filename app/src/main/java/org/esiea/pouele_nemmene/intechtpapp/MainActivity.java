@@ -1,8 +1,10 @@
 package org.esiea.pouele_nemmene.intechtpapp;
 
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Button;
@@ -23,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView tv_hw = (TextView)findViewById(R.id.tv_hello_world);
 
-        String now = DateUtils.formatDateTime(getApplicationContext(), (new Date()).getTime(), DateFormat.FULL);
+        String now   = DateUtils.formatDateTime(getApplicationContext(), (new Date()).getTime(), DateFormat.FULL);
         tv_hw.setText(now);
 
         Button btn_hw = (Button)findViewById(R.id.button);
@@ -31,7 +33,10 @@ public class MainActivity extends AppCompatActivity {
         DatePickerDialog.OnDateSetListener odsl = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                tv_hw.setText(i2+"/"+i1+"/"+i);
+                String newDate = i2+"/"+i1+"/"+i;
+                tv_hw.setText(newDate);
+
+                notification_test("Modification", "Date modifié en "+newDate);
             }
         };
 
@@ -42,8 +47,20 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 dpd.show();
                 Toast.makeText(getApplicationContext(), "Selection de date", Toast.LENGTH_SHORT).show();
-
             }
         });
+    }
+
+    public void notification_test(String title, String message){
+        NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this);
+        notifBuilder.setSmallIcon(R.drawable.logo)
+                .setContentTitle(title)
+                .setContentText(message);
+
+        int mNotificationId = 001;
+        NotificationManager notifyManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notifyManager.notify(mNotificationId, notifBuilder.build());
+
     }
 }
