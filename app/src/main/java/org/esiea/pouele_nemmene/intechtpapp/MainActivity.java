@@ -2,10 +2,13 @@ package org.esiea.pouele_nemmene.intechtpapp;
 
 import android.app.DatePickerDialog;
 import android.app.NotificationManager;
+import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
 import android.text.format.DateUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 String newDate = i2+"/"+i1+"/"+i;
                 tv_hw.setText(newDate);
 
-                notification_test("Modification", "Date modifié en "+newDate);
+                notification_test("Modification", "Date modifié en " + newDate);
             }
         };
 
@@ -54,13 +57,33 @@ public class MainActivity extends AppCompatActivity {
     public void notification_test(String title, String message){
         NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this);
         notifBuilder.setSmallIcon(R.drawable.logo)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo))
                 .setContentTitle(title)
                 .setContentText(message);
 
-        int mNotificationId = 001;
+        int mNotificationId = 1;
         NotificationManager notifyManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notifyManager.notify(mNotificationId, notifBuilder.build());
+    }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item1:
+                Toast.makeText(getApplicationContext(), getString(R.string.menu_item1), Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.item2:
+                Toast.makeText(getApplicationContext(), getString(R.string.menu_item2), Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.help:
+                Toast.makeText(getApplicationContext(), getString(R.string.menu_help), Toast.LENGTH_SHORT).show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

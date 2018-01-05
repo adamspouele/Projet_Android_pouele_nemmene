@@ -3,4 +3,7 @@
     <string name="app_name">IntechTPApp</string>
     <string name="button_text">Click</string>
     <string name="hello_world">Hello World</string>
+    <string name="menu_item1">Item1</string>
+    <string name="menu_item2">Item2</string>
+    <string name="menu_help">Help</string>
 </resources>
