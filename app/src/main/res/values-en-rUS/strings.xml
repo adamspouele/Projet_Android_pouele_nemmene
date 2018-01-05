@@ -6,4 +6,5 @@
     <string name="menu_item1">Item1</string>
     <string name="menu_item2">Item2</string>
     <string name="menu_help">Help</string>
+    <string name="button_navigate">Navigate</string>
 </resources>

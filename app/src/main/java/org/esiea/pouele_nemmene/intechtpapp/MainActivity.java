@@ -2,6 +2,7 @@ package org.esiea.pouele_nemmene.intechtpapp;
 
 import android.app.DatePickerDialog;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView tv_hw = (TextView)findViewById(R.id.tv_hello_world);
 
-        String now   = DateUtils.formatDateTime(getApplicationContext(), (new Date()).getTime(), DateFormat.FULL);
+        String now = DateUtils.formatDateTime(getApplicationContext(), (new Date()).getTime(), DateFormat.FULL);
         tv_hw.setText(now);
 
         Button btn_hw = (Button)findViewById(R.id.button);
@@ -50,6 +51,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 dpd.show();
                 Toast.makeText(getApplicationContext(), "Selection de date", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Button btn_navigate = (Button)findViewById(R.id.button_navigate);
+        goToSecondeActivity(btn_navigate);
+    }
+
+    public void goToSecondeActivity(Button btn){
+        btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                Intent i = new Intent(getApplicationContext(), SecondeActivity.class);
+                startActivity(i);
             }
         });
     }
