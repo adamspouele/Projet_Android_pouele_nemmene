@@ -38,4 +38,11 @@
             tools:layout_editor_absoluteX="146dp"
             tools:layout_editor_absoluteY="327dp" />
 
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_biere"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
 </LinearLayout>

@@ -3,25 +3,42 @@ package org.esiea.pouele_nemmene.intechtpapp;
 import android.app.DatePickerDialog;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Continuer à la page 29 du document du TP
+
+    final static String BIERS_UPDATE = "BIERS_UPDATE";
+    RecyclerView rv = null;
+
      DatePickerDialog dpd = null;
 
     @Override
@@ -30,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final TextView tv_hw = (TextView)findViewById(R.id.tv_hello_world);
+        this.rv = (RecyclerView) findViewById(R.id.rv_biere);
+        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+
+        startServices();
+
+        IntentFilter intentFilter = new IntentFilter(BIERS_UPDATE);
+        LocalBroadcastManager.getInstance(this).registerReceiver(new BierUpdate(this),intentFilter);
+
 
         String now = DateUtils.formatDateTime(getApplicationContext(), (new Date()).getTime(), DateFormat.FULL);
         tv_hw.setText(now);
@@ -42,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 String newDate = i2+"/"+i1+"/"+i;
                 tv_hw.setText(newDate);
 
-                notification_test("Modification", "Date modifié en " + newDate);
+                sendNotification("Modification", "Date modifié en " + newDate);
             }
         };
 
@@ -62,12 +87,24 @@ public class MainActivity extends AppCompatActivity {
         showLondresOnMap(btn_showLondonOnMap);
     }
 
+    public void startServices(){
+        GetBiersServices.startActionBIERS(this);
+    }
+
     public void goToSecondeActivity(Button btn){
         btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
                 Intent i = new Intent(getApplicationContext(), SecondeActivity.class);
                 startActivity(i);
+
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("New Thread", "Thread created ===================> "+ Thread.currentThread().getName());
+                    }
+                }).start();
             }
         });
     }
@@ -81,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void notification_test(String title, String message){
+    public void sendNotification(String title, String message){
         NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this);
         notifBuilder.setSmallIcon(R.drawable.logo)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.logo))
@@ -113,4 +150,57 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public JSONArray getBiersFromFile(){
+        try {
+            InputStream is = new FileInputStream(getCacheDir() + "/" + "bieres.json");
+            byte[] buffer = new byte[is.available()];
+            is.read(buffer);
+            is.close();
+            return new JSONArray(new String(buffer, "UTF-8")); // construction du tableau
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new JSONArray();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return new JSONArray();
+        }
+    }
+
+    private class BiersAdapter extends RecyclerView.Adapter<BiersAdapter.BierHolder> {
+
+        class BierHolder extends RecyclerView.ViewHolder {
+
+            public BierHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+
+        public BiersAdapter() {
+            super();
+        }
+
+        @Override
+        public BierHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return null;
+        }
+
+        @Override
+        public void onBindViewHolder(BierHolder holder, int position) {
+
+        }
+
+        @Override
+        public void onBindViewHolder(BiersAdapter.BierHolder holder, int position, List<Object> payloads) {
+            super.onBindViewHolder(holder, position, payloads);
+        }
+
+        @Override
+        public int getItemCount() {
+            return 0;
+        }
+    }
+
 }
+
