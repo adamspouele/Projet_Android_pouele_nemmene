@@ -39,7 +39,6 @@ public class BierUpdate extends BroadcastReceiver {
         Log.d("Received", this.BIERS_UPDATE);
 
         this.sendNotification("Terminé", "Téléchargement des bières terminé.");
-
     }
 
     @Override

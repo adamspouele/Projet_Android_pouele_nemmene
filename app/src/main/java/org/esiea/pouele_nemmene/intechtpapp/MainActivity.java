@@ -14,12 +14,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView tv_hw = (TextView)findViewById(R.id.tv_hello_world);
         this.rv = (RecyclerView) findViewById(R.id.rv_biere);
-        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+        rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false));
+        rv.setAdapter(new BiersAdapter(this.getBiersFromFile()));
 
         startServices();
 
         IntentFilter intentFilter = new IntentFilter(BIERS_UPDATE);
         LocalBroadcastManager.getInstance(this).registerReceiver(new BierUpdate(this),intentFilter);
-
 
         String now = DateUtils.formatDateTime(getApplicationContext(), (new Date()).getTime(), DateFormat.FULL);
         tv_hw.setText(now);
@@ -169,36 +171,51 @@ public class MainActivity extends AppCompatActivity {
 
     private class BiersAdapter extends RecyclerView.Adapter<BiersAdapter.BierHolder> {
 
-        class BierHolder extends RecyclerView.ViewHolder {
+        private JSONArray bieres;
+
+        public class BierHolder extends RecyclerView.ViewHolder {
+
+            public TextView name;
 
             public BierHolder(View itemView) {
+
                 super(itemView);
+                this.name = itemView.findViewById(R.id.rv_bier_element_name);
             }
         }
 
-
-        public BiersAdapter() {
+        public BiersAdapter(JSONArray jsonArray) {
             super();
+            this.bieres = jsonArray;
+        }
+
+        public void setNewBiere(JSONArray jsonArray){
+            this.bieres = jsonArray;
+            notifyDataSetChanged();
         }
 
         @Override
         public BierHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
+
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.rv_bier_element, null, false);
+
+            BierHolder bh = new BierHolder(v);
+            return  bh;
         }
 
         @Override
         public void onBindViewHolder(BierHolder holder, int position) {
-
-        }
-
-        @Override
-        public void onBindViewHolder(BiersAdapter.BierHolder holder, int position, List<Object> payloads) {
-            super.onBindViewHolder(holder, position, payloads);
+            try {
+                holder.name.setText(this.bieres.getJSONObject(position).getString("name"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return this.bieres.length();
         }
     }
 
